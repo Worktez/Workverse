@@ -12,7 +12,7 @@ import { Color } from 'three';
 export class CubeComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas')
   private canvasRef!: ElementRef;
-//input() was used in tutorials
+//input() was used in tutorials 
   public rotationSpeedY: number = 0.01;
   public rotationSpeedX: number = 0.01;
   public size: number = 200;
@@ -28,22 +28,19 @@ export class CubeComponent implements OnInit, AfterViewInit {
   }
 
   private geometry = new THREE.BoxGeometry(1, 1, 1);
-  private maerial = new THREE.MeshLambertMaterial({ color: 0xffffff });
-  private cube: THREE.Mesh = new THREE.Mesh(this.geometry, this.maerial);
+    private maerial = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    private cube: THREE.Mesh = new THREE.Mesh(this.geometry, this.maerial);
   private renderer !: THREE.WebGLRenderer;
   private scene  !: THREE.Scene;
 
   private createScene() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
-
     const axesHelper = new THREE.GridHelper(5);
     this.scene.add(axesHelper);
-
     const directionalLight = new THREE.DirectionalLight(0xff0000);
     this.scene.add(directionalLight);
     const directionalLight1 = new THREE.DirectionalLight(0x0000ff);
-    
     directionalLight1.position.set(1, 1, 1);
     this.scene.add(directionalLight1);
     this.scene.add(this.cube);

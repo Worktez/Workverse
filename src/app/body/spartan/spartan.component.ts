@@ -159,7 +159,6 @@ export class SpartanComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-
   }
 
   ngAfterViewInit() {
@@ -167,6 +166,4 @@ export class SpartanComponent implements OnInit {
     this.startRenderingLoop();
     this.createControls();
   }
-
-
 }
