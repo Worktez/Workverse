@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { CharacterLoaderService } from 'src/app/services/character-loader.service';
 import * as THREE from "three";
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
@@ -65,11 +66,11 @@ export class SceneComponent implements OnInit {
   keyevent(event: KeyboardEvent) {
     if (event.key == 'w' || event.key == 'W') {
       this.wPressed = false;
-      this.animationAction.stop();
+      this.characterLoaderService.animationAction.stop();
     }
     if (event.key == 's' || event.key == 'S') {
       this.sPressed = false;
-      this.animationAction.stop();
+      this.characterLoaderService.animationAction.stop();
     }
     if (event.key == 'a' || event.key == 'A') {
       this.aPressed = false;
@@ -97,25 +98,11 @@ export class SceneComponent implements OnInit {
     this.scene.add(light);
 
     // Loading Character 
-    this.fbxLoader.load(
-      'assets/untitled.fbx',
-      (object) => {
-        object.scale.set(0.5, 0.5, 0.5);
-        this.mixer = new THREE.AnimationMixer(object)
-
-        this.animationAction = this.mixer.clipAction(
-          (object as THREE.Object3D).animations[0]
-        )
-        this.cube = object;
-        this.scene.add(this.cube)
-      },
-      (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
+    this.characterLoaderService.loadNewCharacter();
+    this.characterLoaderService.characterObservable.subscribe( ()=> {
+      this.cube = this.characterLoaderService.character;
+      this.scene.add(this.cube);
+    } )
 
     // Loading Static object - TV
     this.fbxLoader.load(
@@ -163,7 +150,7 @@ export class SceneComponent implements OnInit {
   private update() {
 
     var delta = this.clock.getDelta(); // seconds.
-    if (this.mixer) this.mixer.update(delta);
+    if (this.characterLoaderService.mixer) this.characterLoaderService.mixer.update(delta);
     var moveDistance = 100 * delta; // 200 pixels per second
     var rotateAngle = Math.PI / 4 * delta;   // pi/4 radians (45 degrees) per second
 
@@ -194,11 +181,11 @@ export class SceneComponent implements OnInit {
 
       // move forwards/backwards/left/right
       if (this.wPressed) {
-        this.animationAction.play();
+        this.characterLoaderService.animationAction.play();
         this.cube.translateZ(-moveDistance);
       }
       if (this.sPressed) {
-        this.animationAction.play();
+        this.characterLoaderService.animationAction.play();
         this.cube.translateZ(moveDistance);
       }
       if (this.qPressed)
@@ -239,7 +226,7 @@ export class SceneComponent implements OnInit {
   }
 
 
-  constructor() { }
+  constructor(public characterLoaderService: CharacterLoaderService) { }
 
   ngOnInit(): void {
 
