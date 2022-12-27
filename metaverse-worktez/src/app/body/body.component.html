@@ -1,0 +1,8 @@
+<!-- <app-cube></app-cube> -->
+<!-- <app-spartan></app-spartan> -->
+<app-scene *ngIf="communicationService.userReady"></app-scene>
+
+<div *ngIf="!communicationService.userReady">
+    <input type="text" [(ngModel)]="communicationService.userName">
+    <button (click)="communicationService.userNameUpdate()" >Set username</button>
+</div>
