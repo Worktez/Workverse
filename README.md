@@ -4,12 +4,12 @@ Welcome to The Virtual Workplace
 
 # To run the client:
 
-cd metaverse-worktez
-npm install
-ng serve
+`cd metaverse-worktez`<br />
+`npm install`<br />
+`ng serve`<br />
 
 # To run the Server:
 
-cd server
-npm install
-npm run start
+`cd server`<br />
+`npm install`<br />
+`npm run start`<br />
