@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CharacterLoaderService } from 'src/app/services/character-loader.service';
 import { CommunicationService } from 'src/app/services/communication.service';
+import { SceneService } from 'src/app/services/scene.service';
 import * as THREE from "three";
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
@@ -91,20 +92,20 @@ export class SceneComponent implements OnInit {
 
   private createScene() {
     // Scene
-    this.characterLoaderService.scene = new THREE.Scene();
-    this.characterLoaderService.scene.background = new THREE.Color(0xa0a0a0a);
-    this.characterLoaderService.scene.fog = new THREE.Fog(0xa0a0a0, 200, 3000);
+    this.sceneService.scene = new THREE.Scene();
+    this.sceneService.scene.background = new THREE.Color(0xa0a0a0a);
+    this.sceneService.scene.fog = new THREE.Fog(0xa0a0a0, 200, 3000);
 
     // Light
     let light = new THREE.HemisphereLight(0xffffff, 0x444444);
     light.position.set(0, 200, 100);
-    this.characterLoaderService.scene.add(light);
+    this.sceneService.scene.add(light);
 
     // Loading Character 
     this.characterLoaderService.loadNewCharacter();
     this.characterLoaderService.characterObservable.subscribe( ()=> {
       this.cube = this.characterLoaderService.character;
-      this.characterLoaderService.scene.add(this.cube);
+      this.sceneService.scene.add(this.cube);
     } )
 
     // Loading Static object - TV
@@ -113,7 +114,7 @@ export class SceneComponent implements OnInit {
       (object) => {
         this.tv = object;
         this.tv.position.set(0, 0, -900)
-        this.characterLoaderService.scene.add(this.tv)
+        this.sceneService.scene.add(this.tv)
       },
       (xhr) => {
         console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
@@ -128,11 +129,11 @@ export class SceneComponent implements OnInit {
       THREE.MeshPhongMaterial({ color: 0x87CEEB, depthWrite: false, side: 2 , depthTest: false}));
     this.wall1.position.set(0, 1000, 0);
     this.wall1.geometry.computeBoundingBox();
-    this.characterLoaderService.scene.add(this.wall1);
+    this.sceneService.scene.add(this.wall1);
 
     // Floor Grid design
     // let grid = new THREE.GridHelper(2000, 40, 0x000000, 0x000000);
-    // this.characterLoaderService.scene.add(grid);
+    // this.sceneService.scene.add(grid);
 
     // Iniatilizing camera
     this.camera = new THREE.PerspectiveCamera(
@@ -141,13 +142,13 @@ export class SceneComponent implements OnInit {
     this.camera.position.x = 0;
     this.camera.position.y = 0;
     this.camera.position.z = 0;
-    this.camera.lookAt(this.characterLoaderService.scene.position);
+    this.camera.lookAt(this.sceneService.scene.position);
 
     // Loading Worktez Logo as a texture
     const img = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('assets/worktez.jpg'), depthWrite: false });
     var plane = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), img);
     plane.rotation.set(-Math.PI / 2, Math.PI / 2000, 2 * Math.PI);
-    this.characterLoaderService.scene.add(plane);
+    this.sceneService.scene.add(plane);
   }
 
   private update() {
@@ -229,12 +230,12 @@ export class SceneComponent implements OnInit {
     (function render() {
       requestAnimationFrame(render);
       component.update();
-      component.renderer.render(component.characterLoaderService.scene, component.camera);
+      component.renderer.render(component.sceneService.scene, component.camera);
     }())
   }
 
 
-  constructor(public characterLoaderService: CharacterLoaderService, public communicationService: CommunicationService) { }
+  constructor(public characterLoaderService: CharacterLoaderService, public communicationService: CommunicationService, public sceneService: SceneService) { }
 
   ngOnInit(): void {
 
