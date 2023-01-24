@@ -15,7 +15,7 @@ export class CharacterLoaderService {
   public mixer: any
   userData = {} as user;
   
-  public character: any
+  public character: any;
   private characterLoader: Subject<boolean> = new Subject<boolean>();
   public characterObservable = this.characterLoader.asObservable();
   animationAction: any;
