@@ -102,6 +102,7 @@ export class SceneComponent implements OnInit {
     this.sceneService.scene.background = new THREE.Color(0xa0a0a0a);
     this.sceneService.scene.fog = new THREE.Fog(0xa0a0a0, 200, 6000);
 
+
     // Light
     let light = new THREE.HemisphereLight(0xffffff, 0x444444);
     light.position.set(0, 200, 100);
@@ -111,16 +112,16 @@ export class SceneComponent implements OnInit {
     this.characterLoaderService.loadNewCharacter();
     this.characterLoaderService.characterObservable.subscribe( ()=> {
       this.cube = this.characterLoaderService.character;
-      this.cube.position.set(0,0,0);
-      this.sceneService.scene.add(this.cube);
+       this.sceneService.scene.add(this.cube);
     } )
 
     // Loading Static object - TV
     this.fbxLoader.load(
-      'assets/TV.fbx',
+      'assets/city/CamelliaCity.fbx',  
       (object) => {
         this.tv = object;
-        this.tv.position.set(0, 0, -900)
+        this.tv.scale.set(0.05,0.05,0.05)
+        this.tv.position.set(0, 0, -1200)
         this.sceneService.scene.add(this.tv)
       },
       (xhr) => {
@@ -133,35 +134,37 @@ export class SceneComponent implements OnInit {
 
     // Boundary Walls and ceilings added as a cube
     this.wall1 = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), new
-    THREE.MeshPhongMaterial({ color: 0xA5D6A7, depthWrite: false, side: 2 , depthTest: false}));
+    THREE.MeshPhongMaterial({ color: 0x000000, depthWrite: false, side: 2 , depthTest: false}));
     this.wall1.position.set(2000, 1000, 0);
     this.wall1.geometry.computeBoundingBox();
     this.sceneService.scene.add(this.wall1);
 
     // Boundary Walls and ceilings added as a cube
     this.wall2 = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), new
-    THREE.MeshPhongMaterial({ color: 0xA5D6A7, depthWrite: false, side: 2 , depthTest: false}));
+    THREE.MeshPhongMaterial({ color: 0x000000, depthWrite: false, side: 2  , depthTest: false}));
     this.wall2.position.set(-2000, 1000, 0);
     this.wall2.geometry.computeBoundingBox();
     this.sceneService.scene.add(this.wall2);
 
     // Boundary Walls and ceilings added as a cube
     this.wall3 = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), new
-    THREE.MeshPhongMaterial({ color: 0xA5D6A7, depthWrite: false, side: 2 , depthTest: false}));
+    THREE.MeshPhongMaterial({ color: 0x000000, depthWrite: false, side: 2 , depthTest: false}));
     this.wall3.position.set(0, 1000, 2000);
+    this.wall3.rotateX( Math.PI * 0.5 );
     this.wall3.geometry.computeBoundingBox();
     this.sceneService.scene.add(this.wall3);
 
     // Boundary Walls and ceilings added as a cube
     this.wall4 = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), new
-    THREE.MeshPhongMaterial({ color: 0xA5D6A7, depthWrite: false, side: 2 , depthTest: false}));
+    THREE.MeshPhongMaterial({ color: 0x000000, depthWrite: false, side: 2 , depthTest: false}));
     this.wall4.position.set(0, 1000, -2000);
+    this.wall4.rotateX( Math.PI * 0.5 );
     this.wall4.geometry.computeBoundingBox();
     this.sceneService.scene.add(this.wall4);
 
     // Boundary Walls and ceilings added as a cube
     this.floor = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), new
-    THREE.MeshPhongMaterial({ color: 0xD50000, depthWrite: false, side: 2 , depthTest: false}));
+    THREE.MeshPhongMaterial({ color: 0xffa54f, depthWrite: false , depthTest: false}));
     this.floor.position.set(0, -1000, 0);
     this.floor.geometry.computeBoundingBox();
     this.sceneService.scene.add(this.floor);
@@ -172,7 +175,7 @@ export class SceneComponent implements OnInit {
 
     // Iniatilizing camera
     this.camera = new THREE.PerspectiveCamera(
-      45, window.innerWidth / window.innerHeight, 1, 4000
+      45, window.innerWidth / window.innerHeight, 1, 6000
     );
     this.camera.position.x = 0;
     this.camera.position.y = 0;
@@ -180,10 +183,10 @@ export class SceneComponent implements OnInit {
     this.camera.lookAt(this.sceneService.scene.position);
 
     // Loading Worktez Logo as a texture
-    // const img = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('assets/worktez.jpg'), depthWrite: false });
-    // var plane = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), img);
-    // plane.rotation.set(-Math.PI / 2, Math.PI / 2000, 2 * Math.PI);
-    // this.sceneService.scene.add(plane);
+    const img = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('assets/worktez.jpg'), depthWrite: false });
+    var plane = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), img);
+    plane.rotation.set(-Math.PI / 2, Math.PI / 2000, 2 * Math.PI);
+    this.sceneService.scene.add(plane);
   }
 
   private update() {
@@ -191,7 +194,7 @@ export class SceneComponent implements OnInit {
     var delta = this.clock.getDelta(); // seconds.
     if (this.characterLoaderService.mixer) this.characterLoaderService.mixer.update(delta);
     var moveDistance = 800 * delta; // 200 pixels per second
-    var rotateAngle = Math.PI / 4 * delta;   // pi/4 radians (45 degrees) per second
+    var rotateAngle = Math.PI / 2 * delta;   // pi/4 radians (45 degrees) per second
 
     const conditions = this.cube.position['z'] > this.wall1.geometry.boundingBox.min.z && this.cube.position['z'] < this.wall1.geometry.boundingBox.max.z && this.cube.position['y'] > this.wall1.geometry.boundingBox.min.y && this.cube.position['y'] < this.wall1.geometry.boundingBox.max.y && this.cube.position['x'] > this.wall1.geometry.boundingBox.min.x && this.cube.position['x'] < this.wall1.geometry.boundingBox.max.x;
 

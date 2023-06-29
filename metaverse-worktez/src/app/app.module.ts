@@ -6,8 +6,6 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { BodyComponent } from './body/body.component';
-import { CubeComponent } from './body/cube/cube.component';
-import { SpartanComponent } from './body/spartan/spartan.component';
 import { SceneComponent } from './body/scene/scene.component';
 import { FormsModule } from '@angular/forms';
 
@@ -17,8 +15,6 @@ import { FormsModule } from '@angular/forms';
     HeaderComponent,
     FooterComponent,
     BodyComponent,
-    CubeComponent,
-    SpartanComponent,
     SceneComponent
   ],
   imports: [

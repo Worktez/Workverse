@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import { user } from '../interfaces/userInterface';
 import { CharacterLoaderService } from './character-loader.service';
 import { CommunicationService } from './communication.service';
@@ -28,11 +30,23 @@ export class OtherCharacterLoaderService {
         // this.userData.Id = this.communicationService.userId;
         // this.userData.UserName = this.communicationService.userName;
         object.name = user.Id;
+        let root = new THREE.Group();
+        root.add(object);
+        const text = document.createElement( 'div' );
+						text.className = 'label';
+						text.style.color = "rgb(255,0,0)";
+						text.textContent = "hiiiiiiii";
+            
+
+						const label = new CSS2DObject( text );
+            label.scale.set(5,5,5)
+						label.position.copy( object.position );
+						root.add( label );
+            // text.appendChild()
+            console.log(root);
+            
+        this.sceneService.scene.add(label);
         this.sceneService.scene.add(object);
-   
-        this.sceneService.scene.children.forEach((element) => {
-          console.log(element);
-        })
         // this.userData.Position = this.character.position;
         // this.communicationService.sendMessage(this.userData);
         this.otherCharacterLoader.next(true)
